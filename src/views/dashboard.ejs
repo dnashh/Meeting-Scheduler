@@ -5,7 +5,16 @@
         <% if (!locals.account.refreshToken) { %>
             <p class="text-center">To let others schedule events authorize your calendar</p>
             <a class="text-center bg-blue-500 w-fit p-3 font-bold text-white rounded mx-auto" href="/oauth">Authorize Google Calendar</a>
-        <% } %>
+        <% } else { %>
+            <p class="text-center">
+                Your URL
+            </p>
+            <div class="flex mx-auto w-fit gap-1">
+                <p id="schedule_link" class="bg-white border-2 border-black p-2"><%= "/" + locals.account.schedule %> </p>
+                <button id="copy" class="bg-gray-400 border-2 border-black p-2">Copy</button>
+            </div>
+            <a class="text-center hover:underline" href="/account">Manage Preferences</a>
+        <% } %> 
         <br>
     </div>
     <% if (locals.account.refreshToken) { %>
@@ -27,8 +36,22 @@
         </p>
     <% } %> 
     <div class="flex mx-auto max-w-md gap-2 w-full justify-center p-4">
-        <a class="p-2 border-2 border-black rounded-md" href="/edit-profile">Edit Profile</a>
+        <!-- <a class="p-2 border-2 border-black rounded-md" href="/edit-profile">Edit Profile</a> -->
         <a class="p-2 border-2 border-black rounded-md" href="/logout">Logout</a>
     </div>
 </article> 
+
+<script>
+    const scheduleLink = document.querySelector('#schedule_link');
+    const copyButton = document.querySelector('#copy');
+
+    copyButton.addEventListener('click', (e) => {
+        navigator.clipboard.writeText(window.location.origin + "/schedule" + scheduleLink.innerText);
+        copyButton.innerText = 'Copied!'
+        setTimeout(()=> {
+            copyButton.innerText = 'Copy'
+        }, 3000);
+    })
+</script>
+
 <%- include('partials/footer') %> 

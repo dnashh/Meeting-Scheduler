@@ -1,4 +1,5 @@
 const errorHandler = (err, req, res, next) => {
+    console.log(err);
     res.send('some error occured.');
 };
 

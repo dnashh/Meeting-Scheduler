@@ -4,15 +4,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atin Meets</title>
-    <link rel="stylesheet" href="output.css">
+    <link rel="stylesheet" href="/output.css">
 </head>
 <body>
 <div class="shadow-md mb-2">
     <nav class="container-md max-w-6xl h-[80px] mx-auto p-2 flex w-full justify-between">
         <a class="text-5xl self-stretch " href="/">@</a>
         <a class="self-stretch h-fit my-auto hover:underline" href="/dashboard">
-            <% if (locals.user) { %>
-             <img class="rounded-full w-[60px] border-4 border-black" src="<%= locals.user.picture %> " alt="profile picture">
+            <% if (user?.picture) { %>
+             <img class="rounded-full w-[60px] border-4 border-black" src="<%= user.picture %> " alt="profile picture">
             <% } else { %>
                 Login
             <% } %> 

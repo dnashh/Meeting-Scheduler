@@ -1,0 +1,49 @@
+<%- include('partials/header', { user }) %> 
+<article>
+    <br>
+    <h1 class="text-center text-3xl font-bold">
+        Schedule a Meeting with <%= locals.meet.name %> 
+    </h1>
+    <br>
+    <form method="post" class="flex flex-col gap-2 max-w-sm mx-auto">
+        <div class="flex flex-col gap-1">
+            <label for="name">Name</label>
+            <input class="border-2 p-3 border-gray-300" type="text" name="name" id="name" value="<%= user.name %> ">
+        </div>
+        <div class="flex flex-col gap-1">
+            <label for="email">Email</label>
+            <input class="border-2 p-3 border-gray-300" type="email" name="email" id="email" value="<%= user.email %> ">
+        </div>
+        <div class="flex flex-col gap-1">
+            <label for="title">Title</label>
+            <input class="border-2 p-3 border-gray-300" type="text" name="title" id="title" value="<%= meeting.email %> ">
+        </div>
+        <div class="flex flex-col gap-1">
+            <label for="starttime">Meeting Duration</label>
+            <select class="border-2 p-3 border-gray-300" name="duration" id="duration">
+                <option value="10">Ten Minutes</option>
+                <option value="15">Fifteen Minutes</option>
+                <option value="30">Half an Hour</option>
+                <option value="60">One Hour</option>
+            </select>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label for="starttime">Pick a Time</label>
+            <input class="border-2 p-3 border-gray-300" type="time" min="<%= meet.timeslots.start %>">
+        </div>
+        <div class="hidden">
+            <% meet.repeat.forEach(day => { %>
+                <%= new Date(Date.now() + today + day) %> 
+            <% }) %>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label for="starttime">Pick a Date</label>
+            <select name="date" id="date">
+
+            </select>
+        </div>    
+        <br>
+        <button class="border-2 border-black bg-yellow-300 p-4 font-bold" type="submit">Schedule Meeting</button>
+    </form>
+</article>
+<%- include('partials/footer') %> 
