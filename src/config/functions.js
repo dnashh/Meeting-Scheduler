@@ -27,7 +27,7 @@ const generateOauthClient = () => {
     return new google.auth.OAuth2(
         process.env.OAUTH_TOKEN,
         process.env.OAUTH_SECRET,
-        process.env.OAUTH_REDIRECT
+        'https://atin-meetings.herokuapp.com/'
     );
 }
 
