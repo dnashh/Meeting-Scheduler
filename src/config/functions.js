@@ -1,13 +1,8 @@
+require('dotenv').config()
 const dayjs = require('dayjs');
 const { google } = require('googleapis');
 const nanoid = require('nanoid');
 const eventSchema = require('../schema/eventSchema');
-
-const oauth2Client = new google.auth.OAuth2(
-    "607553710493-p50a8tji9e9chd5avm3eruqi02v4vhp0.apps.googleusercontent.com",
-    "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",
-    "http://localhost:3000/oauth/callback/"
-);
 
 const nextWeek = (repeat) => {
     const offerings = []
@@ -27,6 +22,16 @@ const nextWeek = (repeat) => {
 const addMinutes = (time, mins) => {
     return dayjs(time).add(mins, 'minutes').$d;
 }
+
+const generateOauthClient = () => {
+    return new google.auth.OAuth2(
+        process.env.OAUTH_TOKEN,
+        process.env.OAUTH_SECRET,
+        process.env.OAUTH_REDIRECT
+    );
+}
+
+const oauth2Client = generateOauthClient();
 
 const deleteMeet = async(data) => {
     oauth2Client.setCredentials({
@@ -105,5 +110,6 @@ const createMeet = async (data) => {
         nextWeek,
         addMinutes,
         createMeet,
-        deleteMeet
+        deleteMeet,
+        generateOauthClient
     }
