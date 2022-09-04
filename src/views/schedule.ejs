@@ -8,40 +8,37 @@
     <form method="post" class="flex flex-col gap-2 max-w-sm mx-auto">
         <div class="flex flex-col gap-1">
             <label for="name">Name</label>
-            <input class="border-2 p-3 border-gray-300" type="text" name="name" id="name" value="<%= user.name %> ">
+            <input class="border-2 p-3 border-gray-300" type="text" name="name" id="name" value="<%= user.name %>" required>
         </div>
         <div class="flex flex-col gap-1">
             <label for="email">Email</label>
-            <input class="border-2 p-3 border-gray-300" type="email" name="email" id="email" value="<%= user.email %> ">
+            <input class="border-2 p-3 border-gray-300" type="email" name="email" id="email" value="<%= user.email %>" required>
         </div>
         <div class="flex flex-col gap-1">
             <label for="title">Title</label>
-            <input class="border-2 p-3 border-gray-300" type="text" name="title" id="title" value="<%= meeting.email %> ">
+            <input class="border-2 p-3 border-gray-300" type="text" name="title" id="title" required>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label for="starttime">Pick a Date</label>
+            <select class="border-2 p-3 border-gray-300" name="date" id="date" required>
+                <% dates.forEach(date => { %>
+                 <option value="<%= date.date %>"><%= date.text %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label for="starttime">Pick a Time</label>
+            <input class="border-2 p-3 border-gray-300" name="time" type="time" value="<%= meet.timeslots.start %>" min="<%= meet.timeslots.start %>" max="<%= meet.timeslots.end %>" required>
         </div>
         <div class="flex flex-col gap-1">
             <label for="starttime">Meeting Duration</label>
-            <select class="border-2 p-3 border-gray-300" name="duration" id="duration">
+            <select class="border-2 p-3 border-gray-300" name="duration" id="duration" required>
                 <option value="10">Ten Minutes</option>
                 <option value="15">Fifteen Minutes</option>
                 <option value="30">Half an Hour</option>
                 <option value="60">One Hour</option>
             </select>
         </div>
-        <div class="flex flex-col gap-1">
-            <label for="starttime">Pick a Time</label>
-            <input class="border-2 p-3 border-gray-300" type="time" min="<%= meet.timeslots.start %>">
-        </div>
-        <div class="hidden">
-            <% meet.repeat.forEach(day => { %>
-                <%= new Date(Date.now() + today + day) %> 
-            <% }) %>
-        </div>
-        <div class="flex flex-col gap-1">
-            <label for="starttime">Pick a Date</label>
-            <select name="date" id="date">
-
-            </select>
-        </div>    
         <br>
         <button class="border-2 border-black bg-yellow-300 p-4 font-bold" type="submit">Schedule Meeting</button>
     </form>

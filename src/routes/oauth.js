@@ -1,6 +1,5 @@
 const express = require('express');
 const nanoid = require('nanoid');
-const session = require('express-session');
 const { google } = require('googleapis');
 const bigPromise = require('../utils/bigPromise');
 const accountSchema = require('../schema/accountSchema');
@@ -24,63 +23,6 @@ router.get('/', bigPromise(async (req, res) => {
 
 
 }));
-
-function updateMeet(calendar, body) {
-    calendar.events.delete({
-        calendarId: 'primary',
-        eventId: "tp2gikvufs5gqsrs7l3prevqmk"
-    }, (err, _res) => {
-        if (err) {
-            console.log('The API returned an error: ' + err)
-            reject(err)
-            return
-        }
-        console.log('Delete event id: ' + err)
-    })
-}
-
-function createMeet(calendar, body) {
-    const id = nanoid()
-    var event = {
-        "summary": body.title,
-        "start": {
-            "dateTime": body.start,
-            "timeZone": "Asia/Kolkata"
-        },
-        "end": {
-            "dateTime": body.end,
-            "timeZone": "Asia/Kolkata"
-        },
-
-        "attendees": body.attendees,
-        "conferenceData": {
-            "createRequest": {
-                "requestId": id.toString(),
-                "conferenceSolutionKey": { "type": "hangoutsMeet" }
-            }
-        },
-
-        "reminders": {
-            'useDefault': true,
-        },
-    }
-
-    calendar.events.insert({
-        auth: oauth2Client,
-        calendarId: 'primary',
-        resource: event,
-        conferenceDataVersion: 1,
-        sendNotifications: true,
-    }, function (err, event) {
-        if (err) {
-            console.log('There was an error contacting the Calendar service: ' + err);
-            return;
-        }
-        console.log('Event created: %s', event.data.htmlLink);
-        console.log(event)
-        console.log(event.data)
-    });
-}
 
 
 async function endedMeet  (req,res){

@@ -1,8 +1,15 @@
 <%- include('partials/header.ejs', { user }) %>
+
 <article>
-    <div class="flex flex-col max-h-screen gap-10 py-40 bg-gray-300">
-        <h1 class=" flex-1 text-center font-bold text-4xl">Schedule your meetings hassle free</h1>
+    <div class=" bg_image flex flex-col md:h-[85vh] gap-10 py-64  bg-gray-300">
+        <h1 class="flex-1 text-center font-bold text-4xl h-fit">Schedule your meetings hassle free</h1>
         <a class="mx-auto border-4 p-4 rounded-xl bg-yellow-400 border-black font-bold" href="/dashboard">Try for Yourself!</a>
     </div>
+    <div class="flex justify-evenly flex-row gap-5 mt-5 py-10 pl-10 bg-gray-900 text-lg text-white items-center">
+        <a class="text-white"href="#" >About us</a>
+        <a class="text-white"href="#" >Contact us</a>
+        <h1 class="text-white">>></h1>
+    </div>
 </article>
+
 <%- include('partials/footer.ejs') %> 

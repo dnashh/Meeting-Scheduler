@@ -1,57 +1,128 @@
 <%- include('partials/header') %>
-<article class="p-2">
-    <div class="flex flex-col rounded-lg max-w-6xl p-2 bg-gray-300 mx-auto gap-2">
-        <h1 class="max-w-6xl font-bold text-3xl mx-auto p-4 text-center">Hello <%= user.name %>! </h1>
-        <% if (!locals.account.refreshToken) { %>
-            <p class="text-center">To let others schedule events authorize your calendar</p>
-            <a class="text-center bg-blue-500 w-fit p-3 font-bold text-white rounded mx-auto" href="/oauth">Authorize Google Calendar</a>
-        <% } else { %>
-            <p class="text-center">
-                Your URL
-            </p>
-            <div class="flex mx-auto w-fit gap-1">
-                <p id="schedule_link" class="bg-white border-2 border-black p-2"><%= "/" + locals.account.schedule %> </p>
-                <button id="copy" class="bg-gray-400 border-2 border-black p-2">Copy</button>
+    <article class="p-2">
+        <div class="bg_profile flex flex-col rounded-lg max-w-6xl p-2 text-white bg-gray-300 mx-auto gap-2">
+            <h1 class="max-w-6xl font-bold text-3xl mx-auto p-4 text-center">Hello <%= user.name %>! </h1>
+            <% if (!locals.account.refreshToken) { %>
+                <p class="text-center">To let others schedule events authorize your calendar</p>
+                <a class="text-center bg-blue-500 w-fit p-3 font-bold text-white rounded mx-auto"
+                    href="/oauth">Authorize Google Calendar</a>
+                <% } else { %>
+                    <% if (account.timeslots.start) { %>
+                        <p class="text-center">
+                            Your URL
+                        </p>
+                        <div class="flex mx-auto w-fit gap-1">
+                            <p id="schedule_link" class="bg-white border-2 text-black border-black p-2">
+                                <%= "/" + locals.account.schedule %>
+                            </p>
+                            <button id="copy" class="bg-gray-400 border-2 border-black p-2">Copy</button>
+                        </div>
+                        <% } %>
+                            <a class="text-center hover:underline" href="/account">Manage Preferences</a>
+                            <% } %>
+                                <br>
+        </div>
+        <% if (locals.account.refreshToken) { %>
+            <div class="flex flex-col max-w-6xl mx-auto p-4 gap-4">
+                <h1 class="text-3xl font-bold">Upcoming Events</h1>
+                <% if (locals.upcoming.length==0) { %>
+                    <div class="text-center">There are no upcoming Events</div>
+                    <% } else { %>
+                        <div class="overflow-x-scroll rounded-md md:overflow-auto md:mx-auto">
+                            <table>
+                                <thead class="bg-yellow-300">
+                                    <tr class="p-2">
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Start</th>
+                                        <th>Duration</th>
+                                        <th>Created_By</th>
+                                        <th>Scheduled_By</th>
+                                        <th>URL</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% upcoming.forEach((event,index)=> { %>
+                                        <tr class="bg-gray-300 text-center">
+                                            <td>
+                                                <%= index + 1 %>
+                                            </td>
+                                            <td>
+                                                <%= event.summary %>
+                                            </td>
+                                            <td>
+                                                <%= new Date(event.start).toLocaleDateString() %>
+                                                    <%= new Date(event.start).toLocaleTimeString() %>
+                                            </td>
+                                            <td>
+                                                <%= event.duration || (event.end - event.start) / (60 * 1000) %> mins
+                                            </td>
+                                            <td>
+                                                <%= event.created_by %>
+                                            </td>
+                                            <td>
+                                                <%= event.scheduled_by %>
+                                            </td>
+                                            <td><a href="<%= event.url %>" target="_blank">
+                                                    <%= event.url %>
+                                                </a></td>
+                                            <td>
+                                                <% if (user.email==event.created_by) { %>
+                                                    <a data-id="<%= event.uid %> ">❌</a>
+                                                    <% } else { %>
+                                                        No Actions
+                                                        <% } %>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
             </div>
-            <a class="text-center hover:underline" href="/account">Manage Preferences</a>
-        <% } %> 
-        <br>
-    </div>
-    <% if (locals.account.refreshToken) { %>
-        <div class="flex flex-col max-w-6xl mx-auto p-4 gap-4">
-            <h1 class="text-3xl font-bold">Upcoming Events</h1>
-            <% if (locals.upcoming.length == 0) { %>
-             <div class="text-center">There are no upcoming Events</div>
-            <% } %>
-        </div>
-        <div class="flex flex-col max-w-6xl mx-auto p-4 gap-4">
-            <h1 class="text-3xl font-bold">Past Events</h1>
-            <% if (locals.past.length == 0) { %>
-             <div class="text-center">There are no Past Events</div>
-            <% } %>
-        </div>
-    <% } else { %>
-        <p class="text-center">
-            Authorize Google Calendar to view all functionalities.
-        </p>
-    <% } %> 
-    <div class="flex mx-auto max-w-md gap-2 w-full justify-center p-4">
-        <!-- <a class="p-2 border-2 border-black rounded-md" href="/edit-profile">Edit Profile</a> -->
-        <a class="p-2 border-2 border-black rounded-md" href="/logout">Logout</a>
-    </div>
-</article> 
+            <div class="flex flex-col max-w-6xl mx-auto p-4 gap-4">
+                <h1 class="text-3xl font-bold">Past Events</h1>
+                <% if (locals.past.length==0) { %>
+                    <div class="text-center">There are no Past Events</div>
+                    <% } %>
+            </div>
+            <% } else { %>
+                <p class="text-center">
+                    Authorize Google Calendar to view all functionalities.
+                </p>
+                <% } %>
+                    <div class="flex mx-auto max-w-md gap-2 w-full justify-center p-4">
+                        <!-- <a class="p-2 border-2 border-black rounded-md" href="/edit-profile">Edit Profile</a> -->
+                        <a class="p-2 border-2 border-black rounded-md" href="/logout">Logout</a>
+                    </div>
+    </article>
 
-<script>
-    const scheduleLink = document.querySelector('#schedule_link');
-    const copyButton = document.querySelector('#copy');
+    <script>
+        const scheduleLink = document.querySelector('#schedule_link');
+        const copyButton = document.querySelector('#copy');
 
-    copyButton.addEventListener('click', (e) => {
-        navigator.clipboard.writeText(window.location.origin + "/schedule" + scheduleLink.innerText);
-        copyButton.innerText = 'Copied!'
-        setTimeout(()=> {
-            copyButton.innerText = 'Copy'
-        }, 3000);
-    })
-</script>
+        copyButton.addEventListener('click', (e) => {
+            navigator.clipboard.writeText(window.location.origin + "/schedule" + scheduleLink.innerText);
+            copyButton.innerText = 'Copied!'
+            setTimeout(() => {
+                copyButton.innerText = 'Copy'
+            }, 3000);
+        });
 
-<%- include('partials/footer') %> 
+        document.querySelectorAll('[data-id]').forEach((data) => {
+            data.addEventListener('click', (e) => {
+                console.log(e.target.dataset.id);
+                const promp = prompt('Are you Sure You Want to Delete? Type DELETE to continue');
+                if(promp == "DELETE") {
+                    fetch('/delete-event/' + e.target.dataset.id, {
+                        method: 'POST',
+                    }).then(() => {
+                        window.location.reload()
+                    })
+                }
+            });
+        });
+    </script>
+
+    <%- include('partials/footer') %>

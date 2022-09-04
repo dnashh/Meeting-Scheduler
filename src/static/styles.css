@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+td, th {
+    padding: 10px;
+}
+
+.bg_image{
+    background-image: url("bg.jpg");
+    background-size: cover;
+}
+
+.bg_profile {
+    background-image: url('profile.jpg');
+    background-size: cover;
+}

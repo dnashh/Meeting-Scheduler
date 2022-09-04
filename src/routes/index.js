@@ -2,7 +2,9 @@ const { localsName } = require('ejs');
 const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
 const res = require('express/lib/response');
+const { nextWeek, addMinutes, createMeet, deleteMeet } = require('../config/functions');
 const accountSchema = require('../schema/accountSchema');
+const eventSchema = require('../schema/eventSchema');
 
 const router = express.Router();
 
@@ -23,7 +25,10 @@ router.get('/', (req, res) => {
 
 router.get('/dashboard',requiresAuth(), async (req, res) => {
     const account = await accountSchema.findOne({ uid: req.oidc.user.sid }) || {}
-    res.render('dashboard', { user: req.oidc.user, upcoming: [], past: [], account })   
+    const upcoming = await eventSchema.find({$or: [{created_by: req.oidc.user.email}, {scheduled_by: req.oidc.user.email}]}).where('start').gt(Date.now())
+    const past = await eventSchema.find({$or: [{created_by: req.oidc.user.email}, {scheduled_by: req.oidc.user.email}]}).where('start').lt(Date.now())
+    console.log(account);
+    res.render('dashboard', { user: req.oidc.user, upcoming, past, account })   
 });
 
 router.get('/account', requiresAuth(), async (req, res) => {
@@ -34,8 +39,26 @@ router.get('/account', requiresAuth(), async (req, res) => {
 router.get('/schedule/:schedule', async (req, res) => {
     const { schedule } = req.params;
     const meet = await accountSchema.findOne({ schedule });
+    const dates = nextWeek(meet.repeat);
+    res.render('schedule', { meet, user: req.oidc.user || {}, dates });
+});
 
-    res.render('schedule', { meet, user: req.oidc.user || {}, meeting: {} });
+router.post('/schedule/:schedule', async (req, res) => {
+    const data = req.body;
+    const { schedule } = req.params;
+    const meet = await accountSchema.findOne({ schedule });
+    data.start = addMinutes(data.date+"T"+data.time,0);
+    data.end = addMinutes(data.date+"T"+data.time, data.duration);
+    await createMeet({
+        refreshToken: meet.refreshToken,
+        title: data.title,
+        start: data.start,
+        end: data.end,
+        scheduled_by: data.email,
+        scheduler: data.name,
+        duration: data.duration
+    })
+    res.render('success', { user: req.oidc.user });
 });
 
 router.post('/account/', requiresAuth(), async (req, res) => {
@@ -49,6 +72,17 @@ router.post('/account/', requiresAuth(), async (req, res) => {
     })
     res.redirect('/dashboard')
 });
+
+router.post('/delete-event/:id', requiresAuth() ,async (req, res) => {
+
+    const { refreshToken } = await accountSchema.findOne({ email: req.oidc.user.email });
+    await deleteMeet({
+        refreshToken: refreshToken,
+        eventId: req.params.id
+    });
+    await eventSchema.deleteOne({ uid: req.params.id })
+    res.redirect('/dashboard');
+})
 
 router.use('/oauth', require('./oauth'));
 
