@@ -1,7 +1,6 @@
-const { localsName } = require('ejs');
+require('dotenv').config();
 const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
-const res = require('express/lib/response');
 const { nextWeek, addMinutes, createMeet, deleteMeet } = require('../config/functions');
 const accountSchema = require('../schema/accountSchema');
 const eventSchema = require('../schema/eventSchema');
@@ -11,10 +10,10 @@ const router = express.Router();
 const config = {
     authRequired: false,
     auth0Logout: true,
-    secret: 'a long, randomly-generated string stored in env',
-    baseURL: 'http://localhost:3000',
-    clientID: 'rXlIFihpIg4QiZOOxMOPaiyDDs0xiSAP',
-    issuerBaseURL: 'https://dev-l6t3wm6h.us.auth0.com',
+    secret: process.env.AUTH_SECRET,
+    baseURL: process.env.BASEURL,
+    clientID: process.env.CLIENT_ID,
+    issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
 
 router.use(auth(config));
