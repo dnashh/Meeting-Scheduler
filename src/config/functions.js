@@ -25,9 +25,9 @@ const addMinutes = (time, mins) => {
 
 const generateOauthClient = () => {
     return new google.auth.OAuth2(
-        process.env.OAUTH_TOKEN,
-        process.env.OAUTH_SECRET,
-        'https://atin-meetings.herokuapp.com/'
+        '607553710493-p50a8tji9e9chd5avm3eruqi02v4vhp0.apps.googleusercontent.com',
+        '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',
+        'https://atin-meetings.herokuapp.com/oauth/callback/'
     );
 }
 
