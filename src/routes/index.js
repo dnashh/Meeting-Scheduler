@@ -12,7 +12,7 @@ const config = {
     auth0Logout: true,
     secret: process.env.AUTH_SECRET,
     baseURL: process.env.BASEURL,
-    clientID: process.env.CLIENT_ID,
+    clientID: process.env.AUTH_CLIENT_ID,
     issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
 
