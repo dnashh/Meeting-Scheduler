@@ -26,9 +26,8 @@ router.get('/', (req, res) => {
 router.get('/dashboard',requiresAuth(), async (req, res) => {
     const account = await accountSchema.findOne({ uid: req.oidc.user.sid }) || {}
     const upcoming = await eventSchema.find({$or: [{created_by: req.oidc.user.email}, {scheduled_by: req.oidc.user.email}]}).where('start').gt(Date.now())
-    const past = await eventSchema.find({$or: [{created_by: req.oidc.user.email}, {scheduled_by: req.oidc.user.email}]}).where('start').lt(Date.now())
     console.log(account);
-    res.render('dashboard', { user: req.oidc.user, upcoming, past, account })   
+    res.render('dashboard', { user: req.oidc.user, upcoming, account })   
 });
 
 router.get('/account', requiresAuth(), async (req, res) => {
