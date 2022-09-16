@@ -10,10 +10,10 @@ const router = express.Router();
 const config = {
     authRequired: false,
     auth0Logout: true,
-    secret: 'this is a secret key',
-    baseURL: 'https://atin-meetings.herokuapp.com',
-    clientID: 'Ym43uAyw8svfIlfjIoVpVvpE2ouPv16e',
-    issuerBaseURL: 'https://dev-77mgfyfc.us.auth0.com',
+    secret: process.env.AUTH_SECRET,
+    baseURL: process.env.BASEURL,
+    clientID: process.env.AUTH_CLIENT_ID,
+    issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
 
 router.use(auth(config));

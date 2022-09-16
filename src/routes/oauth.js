@@ -24,7 +24,6 @@ router.get('/', bigPromise(async (req, res) => {
 
 async function endedMeet  (req,res){
     var account=await accountSchema.findOne({uid:req.oidc.user.sid})
-    console.log(account.refreshToken)
     oauth2Client.setCredentials({
         refresh_token:  account.refreshToken,
     });
